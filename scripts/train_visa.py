@@ -64,7 +64,7 @@ if __name__ == "__main__":
 
     parser.add_argument("--resume_path", default='./models/base.ckpt')
 
-    parser.add_argument("--data_path", default="/DATASET/anomaly_detection/VisA", type=str)
+    parser.add_argument("--data_path", default="./data/VisA", type=str)
 
     parser.add_argument("--setting", default=1, type=int)
 

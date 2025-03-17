@@ -100,15 +100,15 @@ Then run the code to get the output model `./models/base.ckpt`.
 
 ## 4. Train
 The incremental settings for the MVTec and VisA datasets are shown in the table.
-| Dataset | ID |   Incremental setting   |
+| Dataset | Setting ID |   Incremental setting   |
 |:-------:|:--:|:-----------------------:|
 |  MVTec  |  1 |    14 - 1 with 1 Step   |
-|         |  2 |    10 - 5 with 1 Step   |
-|         |  3 |    3 ✖️ 5 with 5 Steps   |
-|         |  4 | 10 - 1 ✖️ 5 with 5 Steps |
+|  MVTec  |  2 |    10 - 5 with 1 Step   |
+|  MVTec  |  3 |    3 ✖️ 5 with 5 Steps   |
+|  MVTec  |  4 | 10 - 1 ✖️ 5 with 5 Steps |
 |   VisA  |  1 |    11 - 1 with 1 Step   |
-|         |  2 |    8 - 4 with 1 Step    |
-|         |  3 |   8 - 1 ✖️ with 4 Step   |
+|   VisA  |  2 |    8 - 4 with 1 Step    |
+|   VisA  |  3 |   8 - 1 ✖️ with 4 Step   |
 
 The training scripts are as follows:
 

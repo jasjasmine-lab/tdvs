@@ -1,30 +1,19 @@
-import random
-
-import torchmetrics
-
+import sys
+import os
+sys.path.append(os.getcwd())
 from share import *
-from einops import rearrange, repeat
-import pytorch_lightning as pl
 import torch
 import os
 import argparse
-import torch.nn as nn
-import torch.optim as optim
-import torchvision
 import numpy as np
-from PIL import Image
 from torch.utils.data import DataLoader
 from cdm.model import create_model, load_state_dict
 from utils.eval_helper import dump, save_metrics, merge_together, performances
-from torch.nn import functional as F
-import logging
-import timm
 from scipy.ndimage import gaussian_filter
 import cv2
 from utils.util import cal_anomaly_map, log_local, create_logger, setup_seed
 from tqdm import tqdm
-from utils.dice_score import dice_loss
-from data.mvtecad_dataloader import MVTecDataset_cad
+from data.mvtecad_dataloader import VisaDataset_cad
 
 def main(args):
 
@@ -32,7 +21,7 @@ def main(args):
 
     setup_seed(args.seed)
 
-    model = create_model('models/cdad_mvtec.yaml').cpu()
+    model = create_model('models/cdad_visa.yaml').cpu()
 
     log = f'demo_task{args.task}'
 
@@ -40,7 +29,7 @@ def main(args):
     model.load_state_dict(weights, strict=False)
 
     # Misc
-    dataset, _ = MVTecDataset_cad('test', args.data_path, args.setting)
+    dataset, _ = VisaDataset_cad('test', args.data_path, args.setting)
     dataloader = DataLoader(dataset[args.task], num_workers=8, batch_size=args.batch_size, shuffle=False)
 
     model = model.cuda()
@@ -49,7 +38,7 @@ def main(args):
 
     result = {'clsname':[], 'filename':[], 'pred':[], 'mask':[], 'input':[]}
 
-    evl_dir = "TEST/mvtec"
+    evl_dir = "TEST/visa"
     os.makedirs(f"{evl_dir}/image", exist_ok=True)
     os.makedirs(f"{evl_dir}/log/setting{args.setting}/", exist_ok=True)
 
@@ -131,7 +120,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="CDAD")
 
-    parser.add_argument("--data_path", default="/DATASET/anomaly_detection/mvtec_anomaly_detection", type=str)
+    parser.add_argument("--data_path", default="../VisA", type=str)
 
     parser.add_argument("--setting", default=1, type=int)
 

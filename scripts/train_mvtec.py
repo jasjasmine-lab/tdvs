@@ -63,9 +63,9 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="CDAD")
 
-    parser.add_argument("--resume_path", default='/home/lxf/MYWORK/CVPR2025/models/diad_0.ckpt')
+    parser.add_argument("--resume_path", default='./models/base.ckpt')
 
-    parser.add_argument("--data_path", default="/DATASET/anomaly_detection/mvtec_anomaly_detection", type=str)
+    parser.add_argument("--data_path", default="./data/mvtec_anomaly_detection", type=str)
 
     parser.add_argument("--setting", default=1, type=int)
 

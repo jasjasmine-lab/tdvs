@@ -1,3 +1,6 @@
+import sys
+import os
+sys.path.append(os.getcwd())
 from share import *
 import torch
 import os
@@ -10,7 +13,6 @@ from scipy.ndimage import gaussian_filter
 import cv2
 from utils.util import cal_anomaly_map, log_local, setup_seed
 from tqdm import tqdm
-from utils.dice_score import dice_loss
 from data.mvtecad_dataloader import MVTecDataset_cad
 
 def main(args):
@@ -118,7 +120,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="CDAD")
 
-    parser.add_argument("--data_path", default="/DATASET/anomaly_detection/mvtec_anomaly_detection", type=str)
+    parser.add_argument("--data_path", default="../mvtec_anomaly_detection", type=str)
 
     parser.add_argument("--setting", default=1, type=int)
 
