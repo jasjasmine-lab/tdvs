@@ -124,7 +124,7 @@ The trained checkpoints of `MVTec, setting [s], task [t]` are saved under `./inc
     $ python scripts/train_mvtec.py --setting [s] --task [t]
     $ python scripts/train_visa.py --setting [s] --task [t]
 
-The test results ages are saved under `./Test/`
+The test results are saved under `./Test/`
 
 
 
