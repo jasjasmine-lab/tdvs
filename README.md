@@ -121,8 +121,8 @@ The training logs are saved under `./log`
 ## 5. Test
 The trained checkpoints of `MVTec, setting [s], task [t]` are saved under `./incre_val/mvtec_setting[s]/task[t]_best.ckpt`. For evaluation and visualization, run the following code:
 
-    $ python scripts/train_mvtec.py --setting [s] --task [t]
-    $ python scripts/train_visa.py --setting [s] --task [t]
+    $ python scripts/test_mvtec.py --setting [s] --task [t]
+    $ python scripts/test_visa.py --setting [s] --task [t]
 
 The test results are saved under `./Test/`
 
