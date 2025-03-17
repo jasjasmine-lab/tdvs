@@ -120,7 +120,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="CDAD")
 
-    parser.add_argument("--data_path", default="../mvtec_anomaly_detection", type=str)
+    parser.add_argument("--data_path", default="./data/mvtec_anomaly_detection", type=str)
 
     parser.add_argument("--setting", default=1, type=int)
 

@@ -1,5 +1,5 @@
 # [CVPR 2025] One-for-More
-##One-for-More: Continual Diffusion Model for Anomaly Detection##
+**One-for-More: Continual Diffusion Model for Anomaly Detection**
 
 
 [Xiaofan Li<sup>1</sup>](https://scholar.google.com/citations?user=WFppW4IAAAAJ&hl=zh-CN),
@@ -14,18 +14,18 @@ Yulong Chen<sup>3</sup>,
 [Lizhuang Ma<sup>1,3</sup>](https://scholar.google.com/citations?user=yd58y_0AAAAJ&hl=zh-CN),
 [Yuan Xie<sup>1</sup>](https://scholar.google.com/citations?user=RN1QMPgAAAAJ&hl=zh-CN)
 
-<sup>1</sup>East China Normal University, \
-<sup>2</sup>Xiamen University,\
-<sup>3</sup>Shanghai Jiao Tong University,\
-<sup>4</sup>Youtu Lab, Tencent,\
-<sup>5</sup>WeChatPay Lab33, Tencent,\
-<sup>6</sup>CATL,
+<sup>1</sup>East China Normal University,
+<sup>2</sup>Xiamen University, <sup>3</sup>Shanghai Jiao Tong University,
+<sup>4</sup>Youtu Lab, Tencent, <sup>5</sup>WeChatPay Lab33, Tencent,<sup>6</sup>CATL,
 
-[[`Paper`](https://arxiv.org/abs/2502.19848)] 
+[[📖 Paper](https://arxiv.org/abs/2502.19848)] 
 <!-- [[`Project Page`](https://lewandofskee.github.io/projects/diad/)] -->
 
 
-<!-- ## News -->
+## 💥 News
+- **[2025.03.17]** We release the code for training and test 🚀
+- **[2025.02.27]** We release the [arXiv paper](hhttps://arxiv.org/abs/2502.19848) 🚀
+- **[2025.02.28]** The paper is accepted by CVPR 2025 🎉
 
 ## Abstract
 With the rise of generative models, there is a growing interest in unifying all tasks within a generative framework. Anomaly detection methods also fall into this scope and utilize diffusion models to generate or reconstruct normal samples when given arbitrary anomaly images. However, our study found that the diffusion model suffers from severe **faithfulness hallucination** and **catastrophic forgetting**, which can't meet the unpredictable pattern increments. To mitigate the above problems, we propose a continual diffusion model that uses gradient projection to achieve stable continual learning. Gradient projection deploys a regularization on the model updating by modifying the gradient towards the direction protecting the learned knowledge. But as a double-edged sword, it also requires huge memory costs brought by the Markov process. Hence, we propose an iterative singular value decomposition method based on the transitive property of linear representation, which consumes tiny memory and incurs almost no performance loss. Finally, considering the risk of ``over-fitting'' to normal images of the diffusion model, we propose an anomaly-masked network to enhance the condition mechanism of the diffusion model. For continual anomaly detection, ours achieves first place in 17/18 settings on MVTec and VisA.
