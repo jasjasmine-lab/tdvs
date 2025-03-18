@@ -3,7 +3,7 @@
 
 
 [Xiaofan Li<sup>1</sup>](https://scholar.google.com/citations?user=WFppW4IAAAAJ&hl=zh-CN),
-[Xin Tan<sup>1</sup>](https://scholar.google.com/citations?user=WFppW4IAAAAJ&hl=zh-CN),
+[Xin Tan<sup>1</sup>](https://scholar.google.com/citations?user=UY4NCdcAAAAJ&hl=zh-CN),
 Zhuo Chen<sup>2</sup>,
 [Zhizhong Zhang<sup>1</sup>](https://scholar.google.com/citations?user=CXZciFAAAAAJ&hl=zh-CN),
 Ruixin Zhang<sup>4</sup>,
@@ -108,7 +108,7 @@ The incremental settings for the MVTec and VisA datasets are shown in the table.
 |  MVTec  |  4 | 10 - 1 ✖️ 5 with 5 Steps |
 |   VisA  |  1 |    11 - 1 with 1 Step   |
 |   VisA  |  2 |    8 - 4 with 1 Step    |
-|   VisA  |  3 |   8 - 1 ✖️ with 4 Step   |
+|   VisA  |  3 |   8 - 1 ✖️ with 4 Steps   |
 
 The training scripts are as follows:
 
