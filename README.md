@@ -90,7 +90,7 @@ First download the checkpoint of AutoEncoder and diffusion model, we use the pre
 
     $ wget https://ommer-lab.com/files/latent-diffusion/kl-f8.zip
     $ unzip kl-f8.zip
-    $ wget https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5/blob/main/v1-5-pruned.ckpt
+    $ wget https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5/resolve/main/v1-5-pruned.ckpt
     
 
 Then run the code to get the output model `./models/base.ckpt`.
