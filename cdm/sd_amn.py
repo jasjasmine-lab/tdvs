@@ -218,8 +218,12 @@ class SD_AMN(LatentDiffusion):
 
     # @torch.no_grad()
     # def on_test_batch_end(self, outputs, batch, batch_idx, dataloader_idx):
+    #     【需要修改的函数3】SD_AMN中的批次SVD处理（已注释）
+    #     原功能：与gpm.py中的on_test_batch_end功能相同
+    #     修改点：如果启用此功能，需要同样替换SVD方法
     #     if batch_idx % 10 == 0:
     #         for name, act in self.act.items():
+    #             # 【原始SVD实现】
     #             U, S, Vh = torch.linalg.svd(act.cuda(), full_matrices=False)
 
     #             sval_total = (S**2).sum()
@@ -229,16 +233,21 @@ class SD_AMN(LatentDiffusion):
 
     # @torch.no_grad()
     # def on_test_end(self):
+    #     【需要修改的函数4】SD_AMN中的测试结束SVD处理（已注释）
+    #     原功能：与gpm.py中的on_test_end功能相同，实现增量SVD
+    #     修改点：如果启用此功能，需要同样替换SVD方法
     #     for name, act in self.act.items():
     #         if not name in self.project.keys():
     #             self.project[name] = act.cuda()
     #         else:
+    #             # 【原始iSVD实现】
     #             U1, S1, Vh1 = torch.linalg.svd(act.cuda(), full_matrices=False)
 
     #             sval_total = (S1**2).sum()
 
     #             act_hat = act.cuda() - self.project[name] @ self.project[name].t() @ act.cuda()
 
+    #             # 【第二次SVD调用】
     #             U, S, Vh = torch.linalg.svd(act_hat)
           
     #             sval_hat = (S**2).sum()

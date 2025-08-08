@@ -19,6 +19,12 @@ from ldm.util import log_txt_as_img, exists, instantiate_from_config
 from ldm.models.diffusion.ddim import DDIMSampler
 from cdm.vit import *
 
+# 【SVD替换所需的额外导入】
+# 如果要使用sklearn的分解方法，需要取消注释以下导入：
+# from sklearn.decomposition import TruncatedSVD, IncrementalPCA
+# from sklearn.utils.extmath import randomized_svd
+# import numpy as np
+
 
 class CDAD(SD_AMN):
     """
@@ -68,27 +74,64 @@ class CDAD(SD_AMN):
 
     @torch.no_grad()
     def on_test_batch_end(self, outputs, batch, batch_idx, dataloader_idx):
+        """
+        【需要修改的函数1】批次结束时的SVD处理
+        原功能：使用torch.linalg.svd进行奇异值分解，保留99.9%的能量
+        修改点：可以替换为其他SVD方法，如：
+        1. 使用sklearn的TruncatedSVD: from sklearn.decomposition import TruncatedSVD
+        2. 使用randomized SVD: torch.svd_lowrank()
+        3. 使用incremental PCA: from sklearn.decomposition import IncrementalPCA
+        """
         if batch_idx % 10 == 0:
             for name, act in self.act.items():
+                # 【原始iSVD实现】- 可替换为其他SVD方法
                 U, S, Vh = torch.linalg.svd(act.cuda(), full_matrices=False)
 
                 sval_total = (S**2).sum()
                 sval_ratio = (S**2) / sval_total
                 r = max(torch.sum(torch.cumsum(sval_ratio, dim=0) < 0.999), 1)
                 self.act[name] = U[:, :r].cpu()
+                
+                # 【替换示例1 - 使用randomized SVD】
+                # U, S, Vh = torch.svd_lowrank(act.cuda(), q=min(act.shape)-1)
+                # sval_total = (S**2).sum()
+                # sval_ratio = (S**2) / sval_total
+                # r = max(torch.sum(torch.cumsum(sval_ratio, dim=0) < 0.999), 1)
+                # self.act[name] = U[:, :r].cpu()
+                
+                # 【替换示例2 - 使用TruncatedSVD】
+                # from sklearn.decomposition import TruncatedSVD
+                # n_components = min(min(act.shape)-1, 100)  # 限制组件数量
+                # svd = TruncatedSVD(n_components=n_components)
+                # U_truncated = svd.fit_transform(act.cuda().cpu().numpy())
+                # self.act[name] = torch.tensor(U_truncated).float()
 
     @torch.no_grad()
     def on_test_end(self):
+        """
+        【需要修改的函数2】测试结束时的增量SVD处理
+        原功能：实现增量奇异值分解(iSVD)，将新的激活与已有投影进行正交化后再次SVD
+        修改点：这是iSVD的核心实现，可以替换为：
+        1. 标准SVD + 重新计算所有投影
+        2. 使用sklearn的IncrementalPCA进行增量学习
+        3. 使用在线SVD算法
+        4. 使用随机化SVD方法
+        """
         for name, act in self.act.items():
             if not name in self.project.keys():
+                # 第一次处理该层，直接保存
                 self.project[name] = act.cuda()
             else:
+                # 【原始iSVD实现】- 增量SVD的核心逻辑
+                # 步骤1：对当前激活进行SVD分解
                 U1, S1, Vh1 = torch.linalg.svd(act.cuda(), full_matrices=False)
 
                 sval_total = (S1**2).sum()
 
+                # 步骤2：计算正交化后的激活（去除已有投影的影响）
                 act_hat = act.cuda() - self.project[name] @ self.project[name].t() @ act.cuda()
 
+                # 步骤3：对正交化后的激活进行SVD
                 U, S, Vh = torch.linalg.svd(act_hat)
           
                 sval_hat = (S**2).sum()
@@ -96,6 +139,7 @@ class CDAD(SD_AMN):
 
                 accumulated_sval = (sval_total - sval_hat) / sval_total
 
+                # 步骤4：根据能量阈值选择保留的维度
                 r = 0
                 for ii in range(sval_ratio.shape[0]):
                     # if accumulated_sval < 0.99:
@@ -105,7 +149,29 @@ class CDAD(SD_AMN):
                     else:
                         break
 
+                # 步骤5：将新的主成分添加到现有投影中
                 self.project[name] = torch.cat([self.project[name], act_hat[:, :r]], dim=1)
+                
+                # 【替换示例1 - 使用IncrementalPCA】
+                # from sklearn.decomposition import IncrementalPCA
+                # if not hasattr(self, 'ipca_models'):
+                #     self.ipca_models = {}
+                # if name not in self.ipca_models:
+                #     self.ipca_models[name] = IncrementalPCA(n_components=min(act.shape[0], 100))
+                #     self.project[name] = torch.tensor(self.ipca_models[name].fit_transform(act.cuda().cpu().numpy().T)).cuda().T
+                # else:
+                #     self.ipca_models[name].partial_fit(act.cuda().cpu().numpy().T)
+                #     self.project[name] = torch.tensor(self.ipca_models[name].components_).cuda()
+                
+                # 【替换示例2 - 简单的标准SVD重新计算】
+                # # 将新激活与已有投影合并后重新计算SVD
+                # combined_act = torch.cat([self.project[name], act.cuda()], dim=1)
+                # U_new, S_new, Vh_new = torch.linalg.svd(combined_act, full_matrices=False)
+                # # 根据能量阈值选择维度
+                # sval_total_new = (S_new**2).sum()
+                # sval_ratio_new = (S_new**2) / sval_total_new
+                # r_new = max(torch.sum(torch.cumsum(sval_ratio_new, dim=0) < 0.99), 1)
+                # self.project[name] = U_new[:, :r_new]
 
         torch.save(self.project, f"project/{self.log_name}.pt")
 
